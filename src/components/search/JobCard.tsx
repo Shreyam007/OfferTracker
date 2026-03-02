@@ -51,7 +51,7 @@ export function JobCard({ job, showRibbon, isFeatured }: { job: JobListing, show
             setIsAdded(true);
 
             // Allow animation to complete before "disappearing"
-            setTimeout(() => setActionStatus("gone"), 1000);
+            setTimeout(() => setActionStatus("gone"), 500);
         } catch (error) {
             console.error("Failed to add job to tracker:", error);
             setActionStatus("idle");
@@ -62,18 +62,18 @@ export function JobCard({ job, showRibbon, isFeatured }: { job: JobListing, show
 
     const handleDismiss = () => {
         setActionStatus("dismissing");
-        setTimeout(() => setActionStatus("gone"), 1000);
+        setTimeout(() => setActionStatus("gone"), 500);
     };
 
     if (actionStatus === "gone") return null;
 
     return (
         <div
-            className={`transition-all duration-1000 ease-in-out origin-top overflow-hidden
-                ${actionStatus !== "idle" ? "max-h-0 opacity-0 scale-95 m-0 p-0 border-0" : "max-h-[800px]"}
+            className={`transition-all duration-500 ease-in-out origin-top overflow-hidden
+                ${actionStatus !== "idle" ? "max-h-0 opacity-0 scale-90 m-0 p-0 border-0" : "max-h-[800px]"}
             `}
         >
-            <div className={`relative group h-full mb-6 ${isFeatured ? 'p-0.5' : ''}`}>
+            <div className={`relative group h-full ${isFeatured ? 'p-0.5' : ''}`}>
                 {isFeatured && (
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
                 )}

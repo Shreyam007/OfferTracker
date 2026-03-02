@@ -27,6 +27,11 @@ export async function generateAndSendOTP(email: string) {
     }
 
     try {
+        if (!resend) {
+            console.error("[AUTH] RESEND_API_KEY is missing in environment variables.");
+            return { success: false, error: "Server Configuration Error: Add RESEND_API_KEY to Vercel." };
+        }
+
         const { error } = await resend.emails.send({
             from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
             to: email,
