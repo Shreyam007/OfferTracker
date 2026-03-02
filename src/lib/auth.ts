@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import LinkedInProvider from "next-auth/providers/linkedin";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./db";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -26,6 +27,10 @@ export const authOptions: NextAuthOptions = {
             async authorize(credentials) {
                 if (!credentials?.email) return null;
 
+                let user = await prisma.user.findUnique({
+                    where: { email: credentials.email }
+                });
+
                 // Case 1: OTP Login
                 if (credentials.code) {
                     const otp = await prisma.oTP.findFirst({
@@ -39,27 +44,36 @@ export const authOptions: NextAuthOptions = {
 
                     // Remove used OTP
                     await prisma.oTP.delete({ where: { id: otp.id } });
+
+                    if (!user) {
+                        user = await prisma.user.create({
+                            data: {
+                                email: credentials.email,
+                                name: credentials.email.split("@")[0],
+                            }
+                        });
+                    }
                 }
                 // Case 2: Password Login
                 else if (credentials.password) {
-                    console.log(`[AUTH] Password login for ${credentials.email}`);
+                    if (user) {
+                        if (!user.password) return null;
+                        const isValid = await bcrypt.compare(credentials.password, user.password);
+                        if (!isValid) return null;
+                    } else {
+                        // Registration flow via UI
+                        const hashedPassword = await bcrypt.hash(credentials.password, 10);
+                        user = await prisma.user.create({
+                            data: {
+                                email: credentials.email,
+                                name: credentials.email.split("@")[0],
+                                password: hashedPassword
+                            }
+                        });
+                    }
                 }
                 else {
                     return null;
-                }
-
-                // Find or create user
-                let user = await prisma.user.findUnique({
-                    where: { email: credentials.email }
-                });
-
-                if (!user) {
-                    user = await prisma.user.create({
-                        data: {
-                            email: credentials.email,
-                            name: credentials.email.split("@")[0],
-                        }
-                    });
                 }
 
                 return {
