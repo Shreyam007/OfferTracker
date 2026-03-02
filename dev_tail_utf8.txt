@@ -1,0 +1,100 @@
+﻿ext\dist\trace\trace.js:154
+:20)
+    at async 
+DevServer.handleRequest (C:
+\Users\pshre\OneDrive\Deskt
+op\PROJ\offertrack\node_mod
+ules\next\dist\server\dev\n
+ext-dev-server.js:336:24)
+    at async invokeRender (
+C:\Users\pshre\OneDrive\Des
+ktop\PROJ\offertrack\node_m
+odules\next\dist\server\lib
+\router-server.js:179:21)
+    at async handleRequest 
+(C:\Users\pshre\OneDrive\De
+sktop\PROJ\offertrack\node_
+modules\next\dist\server\li
+b\router-server.js:359:24)
+    at async 
+requestHandlerImpl (C:\User
+s\pshre\OneDrive\Desktop\PR
+OJ\offertrack\node_modules\
+next\dist\server\lib\router
+-server.js:383:13)
+    at async 
+Server.requestListener (C:\
+Users\pshre\OneDrive\Deskto
+p\PROJ\offertrack\node_modu
+les\next\dist\server\lib\st
+art-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\.next\\server\\webpac
+k-runtime.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\.next\\server\\app\\f
+avicon.ico\\route.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\require.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\load-component
+s.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\build\\utils.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\dev\\hot-middl
+eware.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\dev\\hot-reloa
+der-webpack.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\lib\\router-ut
+ils\\setup-dev-bundler.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\lib\\router-se
+rver.js',
+    'C:\\Users\\pshre\\OneD
+rive\\Desktop\\PROJ\\offert
+rack\\node_modules\\next\\d
+ist\\server\\lib\\start-ser
+ver.js'
+  ],
+  page: '/favicon.ico'
+}
+ Γ¿» 
+./src/app/actions/auth.ts
+Error: Failed to read 
+source code from C:\Users\p
+shre\OneDrive\Desktop\PROJ\
+offertrack\src\app\actions\
+auth.ts
+
+Caused by:
+    The system cannot find 
+the file specified. (os 
+error 2)
+
+Import trace for requested 
+module:
+./src/app/actions/auth.ts
+./src/app/login/page.tsx
+ Γ£ô Compiled in 10ms
+ Γ£ô Compiled in 80ms (216 modules)
