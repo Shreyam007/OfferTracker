@@ -33,7 +33,7 @@ export async function generateAndSendOTP(email: string) {
         }
 
         const { error } = await resend.emails.send({
-            from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+            from: "onboarding@resend.dev", // Enforce default to prevent 403 on unverified Vercel domains
             to: email,
             subject: 'Your OfferTrack Verification Code',
             html: `
