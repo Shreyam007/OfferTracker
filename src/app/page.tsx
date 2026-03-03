@@ -64,7 +64,7 @@ export default async function Home() {
             <ActivityChartWidget applications={applications} />
           </div>
           <div className="xl:col-span-1 flex flex-col space-y-6">
-            <WeeklyGoalWidget />
+            <WeeklyGoalWidget current={applications.length} />
             <AIInsightsWidget />
           </div>
         </div>

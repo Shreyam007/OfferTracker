@@ -31,6 +31,54 @@ const mockJobs: JobListing[] = [
         matchScore: 82,
         source: "LinkedIn",
     },
+    {
+        id: "3",
+        title: "AI Engineer",
+        company: "OpenAI",
+        location: "San Francisco, CA",
+        timeAgo: "1h ago",
+        description: "Join the team pushing the boundaries of artificial intelligence. Strong background in Python, PyTorch, and deep learning required.",
+        salary: "$180k - $250k",
+        type: "On-site",
+        matchScore: 88,
+        source: "Company Website",
+    },
+    {
+        id: "4",
+        title: "Machine Learning Developer",
+        company: "Google",
+        location: "Mountain View (Hybrid)",
+        timeAgo: "3h ago",
+        description: "Develop scalable ML models for our core search products. Experience with TensorFlow, Python, and large-scale data processing is essential.",
+        salary: "$160k - $210k",
+        type: "Hybrid",
+        matchScore: 92,
+        source: "LinkedIn",
+    },
+    {
+        id: "5",
+        title: "ML Trainer",
+        company: "Anthropic",
+        location: "Remote",
+        timeAgo: "1d ago",
+        description: "Help fine-tune our next-generation language models. Experience in data annotation, model evaluation, and prompt engineering is a plus.",
+        salary: "$120k - $160k",
+        type: "Full-time",
+        matchScore: 85,
+        source: "Indeed",
+    },
+    {
+        id: "6",
+        title: "Data Scientist",
+        company: "Meta",
+        location: "Menlo Park (Remote)",
+        timeAgo: "2h ago",
+        description: "Leverage massive datasets to uncover insights and build predictive models that drive product decisions.",
+        salary: "$150k - $200k",
+        type: "Full-time",
+        matchScore: 90,
+        source: "Glassdoor",
+    },
 ];
 
 // Recommended Jobs (Matches your skills)
@@ -194,13 +242,10 @@ export function JobGrid() {
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-50 p-2 rounded-xl">
+                            <div className="bg-blue-50 p-2 rounded-xl flex items-center justify-center">
                                 <Sparkles className="w-5 h-5 text-blue-600" />
                             </div>
-                            <div>
-                                <h2 className="text-xl font-black text-gray-900">Matches Your Skills</h2>
-                                <p className="text-sm text-blue-600 font-bold uppercase tracking-wider">(matches ur skills)</p>
-                            </div>
+                            <h2 className="text-sm text-blue-600 font-bold uppercase tracking-wider">(matches ur skills)</h2>
                         </div>
                     </div>
 
