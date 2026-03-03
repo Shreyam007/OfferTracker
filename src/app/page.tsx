@@ -10,6 +10,18 @@ import { TasksSidebar } from "@/components/dashboard/TasksSidebar";
 export default async function Home() {
   const applications = await getApplications();
 
+  // Calculate applications specifically from the last 7 days for the Weekly Goal
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const weeklyApplications = applications.filter(app => {
+    // Check createdAt first, fallback to appliedDate string parsing.
+    if (app.createdAt) {
+      return new Date(app.createdAt) >= oneWeekAgo;
+    }
+    // app.appliedDate is string | null, provide a default to satisfy TS
+    return new Date(app.appliedDate ?? new Date().toISOString()) >= oneWeekAgo;
+  });
+
   const stats = [
     {
       id: 1,
@@ -64,7 +76,7 @@ export default async function Home() {
             <ActivityChartWidget applications={applications} />
           </div>
           <div className="xl:col-span-1 flex flex-col space-y-6">
-            <WeeklyGoalWidget current={applications.length} />
+            <WeeklyGoalWidget current={weeklyApplications.length} />
             <AIInsightsWidget />
           </div>
         </div>

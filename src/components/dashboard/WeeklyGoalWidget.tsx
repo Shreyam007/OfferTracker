@@ -10,9 +10,24 @@ export function WeeklyGoalWidget({ current = 0 }: { current?: number }) {
 
     useEffect(() => {
         if (current >= target && target > 0) {
-            setShowCelebration(true);
-            const timer = setTimeout(() => setShowCelebration(false), 5000);
-            return () => clearTimeout(timer);
+            const lastCelebratedStr = localStorage.getItem('weeklyGoalMetTime');
+            const now = Date.now();
+            let shouldCelebrate = true;
+
+            if (lastCelebratedStr) {
+                const lastCelebrated = parseInt(lastCelebratedStr, 10);
+                // 24 hours in ms = 24 * 60 * 60 * 1000
+                if (now - lastCelebrated < 24 * 60 * 60 * 1000) {
+                    shouldCelebrate = false;
+                }
+            }
+
+            if (shouldCelebrate) {
+                setShowCelebration(true);
+                localStorage.setItem('weeklyGoalMetTime', now.toString());
+                const timer = setTimeout(() => setShowCelebration(false), 5000);
+                return () => clearTimeout(timer);
+            }
         }
     }, [current, target]);
 

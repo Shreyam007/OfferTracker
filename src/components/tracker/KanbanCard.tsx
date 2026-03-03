@@ -4,6 +4,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Trash2, GripVertical } from "lucide-react";
 import { CompanyLogo } from "@/components/common/CompanyLogo";
+import { useState } from "react";
+import { deleteApplication } from "@/app/actions/applications";
 
 export interface ApplicationType {
     id: string;
@@ -21,6 +23,21 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ application }: KanbanCardProps) {
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsDeleting(true);
+        // Wait for the CSS transition to finish before actually deleting
+        setTimeout(async () => {
+            try {
+                await deleteApplication(application.id);
+            } catch (error) {
+                console.error("Failed to delete application", error);
+                setIsDeleting(false); // Revert if failed
+            }
+        }, 300);
+    };
     const {
         attributes,
         listeners,
@@ -116,7 +133,7 @@ export function KanbanCard({ application }: KanbanCardProps) {
         <div
             ref={setNodeRef}
             style={style}
-            className="bg-white dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow group relative"
+            className={`bg-white dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300 group relative ${isDeleting ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}`}
         >
             <div className="flex justify-between items-start mb-3">
                 <div className="flex gap-3">
@@ -152,7 +169,11 @@ export function KanbanCard({ application }: KanbanCardProps) {
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 leading-tight">
                     Applied {application.appliedDate}
                 </p>
-                <button className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-all">
+                <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-all"
+                >
                     <Trash2 className="w-3.5 h-3.5" />
                 </button>
             </div>

@@ -24,6 +24,8 @@ import { ApplicationWithJob } from "@/types/application";
 export function KanbanBoard({ initialApplications }: { initialApplications: ApplicationWithJob[] }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [sortType, setSortType] = useState<"default" | "match" | "recent">("default");
+    const [showFilters, setShowFilters] = useState(false);
 
     // Transform applications from DB to Kanban format
     const transformApplications = (apps: ApplicationWithJob[]) => {
@@ -62,20 +64,30 @@ export function KanbanBoard({ initialApplications }: { initialApplications: Appl
 
     // Derived filtered columns for display
     const filteredColumns = useMemo(() => {
-        if (!searchTerm) return columns;
-
         const term = searchTerm.toLowerCase();
         const filtered: Record<string, ApplicationType[]> = {};
 
         Object.keys(columns).forEach(key => {
-            filtered[key] = columns[key].filter(app =>
-                app.role.toLowerCase().includes(term) ||
+            let colApps = columns[key].filter(app =>
+                !term || app.role.toLowerCase().includes(term) ||
                 app.company.toLowerCase().includes(term)
             );
+
+            if (sortType === "match") {
+                colApps.sort((a, b) => {
+                    const matchA = parseInt(a.tags.find(t => t.type === "match")?.label.split('%')[0] || "0");
+                    const matchB = parseInt(b.tags.find(t => t.type === "match")?.label.split('%')[0] || "0");
+                    return matchB - matchA;
+                });
+            } else if (sortType === "recent") {
+                colApps.sort((a, b) => new Date(b.appliedDate).getTime() - new Date(a.appliedDate).getTime());
+            }
+
+            filtered[key] = colApps;
         });
 
         return filtered;
-    }, [searchTerm, columns]);
+    }, [searchTerm, columns, sortType]);
     const [activeCard, setActiveCard] = useState<ApplicationType | null>(null);
 
     const sensors = useSensors(
@@ -166,10 +178,39 @@ export function KanbanBoard({ initialApplications }: { initialApplications: Appl
                             className="pl-10 pr-4 py-2.5 rounded-xl border border-border dark:border-gray-700 outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm w-full font-bold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 shadow-sm"
                         />
                     </div>
-                    <button className="inline-flex items-center gap-2 rounded-xl border border-border dark:border-gray-700 bg-white dark:bg-gray-800 px-3 sm:px-5 py-2.5 text-sm font-black text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm active:scale-95 uppercase tracking-wider flex-shrink-0">
-                        <Filter className="w-4 h-4" />
-                        <span className="hidden sm:inline">Filters</span>
-                    </button>
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-border dark:border-gray-700 bg-white dark:bg-gray-800 px-3 sm:px-5 py-2.5 text-sm font-black text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm active:scale-95 uppercase tracking-wider flex-shrink-0"
+                        >
+                            <Filter className="w-4 h-4" />
+                            <span className="hidden sm:inline">Filters</span>
+                        </button>
+
+                        {showFilters && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-border dark:border-gray-700 py-2 z-50">
+                                <div className="px-3 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Sort by</div>
+                                <button
+                                    onClick={() => { setSortType("recent"); setShowFilters(false); }}
+                                    className={`w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${sortType === 'recent' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    Date Applied
+                                </button>
+                                <button
+                                    onClick={() => { setSortType("match"); setShowFilters(false); }}
+                                    className={`w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${sortType === 'match' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    Match Score
+                                </button>
+                                <button
+                                    onClick={() => { setSortType("default"); setShowFilters(false); }}
+                                    className={`w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${sortType === 'default' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    Default (Draggable)
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
