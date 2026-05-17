@@ -49,6 +49,67 @@ export default function LoginPage() {
         signIn(provider.toLowerCase(), { callbackUrl: "/" });
     };
 
+    const handleDemoLogin = async () => {
+        setError(null);
+        
+        const demoEmail = "demo@offertrack.com";
+        const demoPassword = "demo1234";
+        const demoName = "Demo User";
+
+        // Reset fields first
+        setEmail("");
+        setPassword("");
+        setFullName("");
+
+        // Typist animation for name if in register view
+        if (view === "register") {
+            for (let i = 1; i <= demoName.length; i++) {
+                setFullName(demoName.slice(0, i));
+                await new Promise((r) => setTimeout(r, 30));
+            }
+            await new Promise((r) => setTimeout(r, 100));
+        }
+
+        // Typist animation for email
+        for (let i = 1; i <= demoEmail.length; i++) {
+            setEmail(demoEmail.slice(0, i));
+            await new Promise((r) => setTimeout(r, 20));
+        }
+
+        await new Promise((r) => setTimeout(r, 100));
+
+        // Typist animation for password
+        for (let i = 1; i <= demoPassword.length; i++) {
+            setPassword(demoPassword.slice(0, i));
+            await new Promise((r) => setTimeout(r, 25));
+        }
+
+        // Delay slightly before loading starts to give a visual satisfaction
+        await new Promise((r) => setTimeout(r, 350));
+        
+        setIsLoading(true);
+
+        try {
+            const result = await signIn("credentials", {
+                email: demoEmail,
+                password: demoPassword,
+                redirect: false,
+                callbackUrl: "/",
+            });
+
+            if (result?.error) {
+                setError("Demo account login failed. Please try again.");
+                setIsLoading(false);
+            } else {
+                window.location.href = "/";
+            }
+        } catch (err) {
+            console.error("Demo sign in error:", err);
+            setError("An unexpected error occurred during demo sign in.");
+            setIsLoading(false);
+        }
+    };
+
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -217,6 +278,10 @@ export default function LoginPage() {
                                 </button>
                             </div>
 
+                            <button type="button" onClick={handleDemoLogin} className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-dashed border-emerald-500/40 dark:border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-2xl text-sm font-black text-emerald-600 dark:text-emerald-400 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/5 transition-all group active:scale-98 animate-pulse hover:animate-none">
+                                <Sparkles className="w-5 h-5 text-emerald-500 group-hover:animate-spin" /> Quick Demo Login (One-Click)
+                            </button>
+
                             <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
                                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100 dark:border-gray-800"></div></div>
                                 <span className="bg-gray-50/50 dark:bg-gray-900 px-3 relative z-10">Or use your email</span>
@@ -266,6 +331,10 @@ export default function LoginPage() {
                                     <Linkedin className="w-5 h-5 text-[#0A66C2] dark:text-[#2882db]" /> LinkedIn
                                 </button>
                             </div>
+
+                            <button type="button" onClick={handleDemoLogin} className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-dashed border-emerald-500/40 dark:border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-2xl text-sm font-black text-emerald-600 dark:text-emerald-400 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/5 transition-all group active:scale-98 animate-pulse hover:animate-none">
+                                <Sparkles className="w-5 h-5 text-emerald-500 group-hover:animate-spin" /> Quick Demo Login (One-Click)
+                            </button>
 
                             <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
                                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100 dark:border-gray-800"></div></div>
